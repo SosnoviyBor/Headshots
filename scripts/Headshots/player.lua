@@ -13,14 +13,6 @@ local l10n = core.l10n("Headshots")
 local sectionOnHeadshot = storage.playerSection("SettingsHeadshots_onHeadshots")
 local sectionToggles = storage.globalSection("SettingsHeadshots_toggles")
 
-input.registerActionHandler(input.actions.Sneak.key, async:callback(function()
-    if sectionToggles:get("requireCrouching") then
-        for _, actor in pairs(nearby.actors) do
-            actor:sendEvent("playerSneaking", not self.controls.sneak)
-        end
-    end
-end))
-
 I.Combat.addOnHitHandler(function(attack)
     if not sectionToggles:get("playerCanBeHeadshot") then return end
     DoHeadshot(attack)

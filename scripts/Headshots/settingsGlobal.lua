@@ -8,18 +8,12 @@ I.Settings.registerGroup {
     order = 0,
     permanentStorage = true,
     settings = {
-        {
-            key = 'modEnabled',
-            name = 'modEnabled_name',
-            renderer = 'checkbox',
-            default = true,
-        },
-        {
-            key = 'playerCanBeHeadshotbed',
-            name = 'playerCanBeHeadshotbed_name',
-            renderer = 'checkbox',
-            default = false,
-        },
+        -- {
+        --     key = 'modEnabled',
+        --     name = 'modEnabled_name',
+        --     renderer = 'checkbox',
+        --     default = true,
+        -- },
     }
 }
 
@@ -32,6 +26,16 @@ I.Settings.registerGroup {
     order = 1,
     permanentStorage = true,
     settings = {
+        {
+            key = 'headHeight',
+            name = 'headHeight_name',
+            description = 'headHeight_description',
+            renderer = 'number',
+            integer = false,
+            default = 0.85,
+            min = 0,
+            max = 1
+        },
         {
             key = 'mode',
             name = 'mode_name',
@@ -72,23 +76,25 @@ I.Settings.registerGroup {
             default = 25,
             min = 1
         },
+        -- Caius' house interior, for reference, is around 7m*7m in size
+        -- Snowy Granius' bridge is about 50 meters long
         {
             key = 'distanceMin',
             name = 'distanceMin_name',
             description = 'distanceMin_description',
             renderer = 'number',
             integer = true,
-            default = 500,
-            min = 1
+            default = 20,
+            min = 0
         },
         {
-            key = 'distanceMax',
-            name = 'distanceMax_name',
-            description = 'distanceMax_description',
+            key = 'damagePerMeter',
+            name = 'damagePerMeter_name',
+            description = 'damagePerMeter_description',
             renderer = 'number',
-            integer = true,
-            default = 1500,
-            min = 1
+            integer = false,
+            default = .025,
+            min = 0
         },
     }
 }
@@ -130,12 +136,6 @@ I.Settings.registerGroup {
     order = 100,
     permanentStorage = true,
     settings = {
-        {
-            key = 'alwaysHeadshot',
-            name = 'alwaysHeadshot_name',
-            renderer = 'checkbox',
-            default = false,
-        },
         {
             key = 'printToConsole',
             name = 'printToConsole_name',

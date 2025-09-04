@@ -7,7 +7,7 @@ require("scripts.Headshots.instakillBlacklist")
 local sectionValues = storage.globalSection("SettingsHeadshots_values")
 local swt = storage.globalSection("SettingsHeadshots_weaponTypes")
 
-Modes = {
+MarksmanScaling = {
     ["Linear"] = function(attacker)
         local fm = sectionValues:get("flatMult")
         local am = TryGetActorMarksman(attacker)
@@ -27,10 +27,13 @@ Modes = {
     end
 }
 
-WeaponTypes = {
-    [types.Weapon.TYPE.Arrow] =             function() return swt:get("marksmanBowEnabled") end,
-    [types.Weapon.TYPE.Bolt] =              function() return swt:get("marksmanCrossbowEnabled") end,
-    [types.Weapon.TYPE.MarksmanBow] =       function() return swt:get("marksmanBowEnabled") end,
-    [types.Weapon.TYPE.MarksmanCrossbow] =  function() return swt:get("marksmanCrossbowEnabled") end,
-    [types.Weapon.TYPE.MarksmanThrown] =    function() return swt:get("marksmanThrownEnabled") end,
-}
+function AllowedWeaponType(weapon)
+    local weaponTypes = {
+        [types.Weapon.TYPE.Arrow] =             swt:get("marksmanBowEnabled"),
+        [types.Weapon.TYPE.Bolt] =              swt:get("marksmanCrossbowEnabled"),
+        [types.Weapon.TYPE.MarksmanBow] =       swt:get("marksmanBowEnabled"),
+        [types.Weapon.TYPE.MarksmanCrossbow] =  swt:get("marksmanCrossbowEnabled"),
+        [types.Weapon.TYPE.MarksmanThrown] =    swt:get("marksmanThrownEnabled"),
+    }
+    return weaponTypes[weapon.type]
+end

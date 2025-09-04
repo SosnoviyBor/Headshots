@@ -7,24 +7,9 @@ require("scripts.Headshots.headshotData")
 local sectionToggles = storage.globalSection("SettingsHeadshots_toggles")
 local sectionValues = storage.globalSection("SettingsHeadshots_values")
 local sectionDebug = storage.globalSection("SettingsHeadshots_debug")
-local selfIsPlayer = self.type == types.Player
-local headShotLevel = 0.85
 
-function UpdatePlayerSneakStatus(currentSneakStatus)
-    PlayerIsSneaking = currentSneakStatus
-end
-
-local function isHeadshotSuccessful(attack)
-    -- basic attack check
-    if not (attack.successful and attack.sourceType == "ranged") then return false end
-
-    if sectionDebug:get("alwaysHeadshot") then return true end
-
-    -- weapon type check
-    local weaponRecord = types.Weapon.record(attack.weapon.recordId)
-    if not WeaponTypes[weaponRecord.type]() then return false end
-
-    -- check if hit was in the head
+local function headHit(attack)
+    local headShotLevel = sectionValues:get("headHeight")
     -- code from Ranged Headshot mod by SkyHasCats
     -- https://modding-openmw.gitlab.io/ranged-headshot/
     local bbox = self:getBoundingBox()
@@ -35,7 +20,7 @@ local function isHeadshotSuccessful(attack)
     -- Convert to 0..1 along vertical axis
     -- bottom = -half.z, top = +half.z
     local normalizedHeight = (rel.z + half.z) / (2 * half.z)
-    --print(string.format("Hit height ratio: %.2f", normalizedHeight))
+    -- print(string.format("Hit height ratio: %.2f", normalizedHeight))
     if normalizedHeight > headShotLevel then
         return true
     else
@@ -43,39 +28,45 @@ local function isHeadshotSuccessful(attack)
     end
 end
 
+local function isHeadshotSuccessful(attack)
+    -- basic attack check
+    if not (attack.successful and attack.sourceType == "ranged") then return false end
+    -- weapon type check
+    local weaponRecord = types.Weapon.record(attack.ammo)
+    if not AllowedWeaponType(weaponRecord) then return false end
+    -- we chill if head takes 100% of the hitbox
+    if not headHit(attack) then return false end
+    -- distance check
+    local distance = UnitsToMeters((attack.attacker.position - self.position):length())
+    if distance < sectionValues:get("distanceMin") then return false end
+
+    return true
+end
+
 local function getHeadshotMultiplier(attack)
     -- initial damage mult calculation
-    local mode = Modes[sectionValues:get("mode")]
-    local damageMult = mode(attack.attacker)
+    local scale = MarksmanScaling[sectionValues:get("mode")]
+    local damageMult = scale(attack.attacker)
 
-    -- distance multiplier calculation
-    local distance = (attack.attacker.position - self.position):length()
-    if distance <= sectionValues:get("distanceMin") then
-        damageMult = damageMult / 2
-    elseif distance <= sectionValues:get("distanceMax") then
-        local relDistance = distance - sectionValues:get("distanceMin")
-        local diff = sectionValues:get("distanceMax") - sectionValues:get("distanceMin")
-        local distanceScale = relDistance / diff
-        damageMult = damageMult / (2 * distanceScale)
-    end
+    local distance = UnitsToMeters((attack.attacker.position - self.position):length())
+    damageMult = damageMult + distance * sectionValues:get("damagePerMeter")
 
     if sectionDebug:get("printToConsole") then
         print("Headshots multiplier debug message!" ..
-            "\nAttacker:        " .. attack.attacker.recordId ..
-            "\nVictim:          " .. self.recordId ..
-            "\nWeapon used:     " .. attack.weapon.recordId ..
-            "\nDamage modifier: x" .. tostring(damageMult))
+            "\nVictim:                  " .. self.recordId ..
+            "\nAmmo used:               " .. attack.ammo ..
+            "\nDistance between actors: " .. tostring(distance) ..
+            "\nDamage modifier:        x" .. tostring(damageMult))
     end
 
     -- you shouldn't be able to hit for less damage
-    damageMult = math.max(damageMult, 1)
-
-    return damageMult
+    return math.max(damageMult, 1)
 end
 
 function DoHeadshot(attack)
-    if not sectionToggles:get("modEnabled") then return end
-
+    -- if the mod is disabled
+    if sectionValues:get("headSize") == 1 then return end
+    
     if not isHeadshotSuccessful(attack) then return end
 
     local damageMult = getHeadshotMultiplier(attack)

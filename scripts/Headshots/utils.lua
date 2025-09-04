@@ -18,3 +18,10 @@ function TryGetActorMarksman(actor)
         return 0
     end
 end
+
+function UnitsToMeters(distance)
+    -- its scuffed, ok?
+    local unitsToFeetScale = 22.1
+    local feetToMetersScale = 3.281
+    return distance / unitsToFeetScale / feetToMetersScale
+end
