@@ -1,0 +1,85 @@
+messageOutdatedLuaAPI: >
+  Modern Mehrunes' Razor warning!
+  You need to update your OpenMW, otherwise the mod won't work!
+  Please install a newer build from at least August 2025!
+messageSuccessfulBackstab1: "Backstab dealt x"
+messageSuccessfulBackstab2: " more damage!"
+messageInstakill: "The backstab was fatal."
+
+
+
+
+
+page_name: "Headshots"
+page_description: "Allows you to hit people in the back for extra damage. No sneak checks!"
+
+
+toggles_group_name: "Toggles"
+modEnabled_name: "Mod Enabled"
+playerCanBeBackstabbed_name: "Player Can Be Backstabbed"
+creatureBackstabsEnabled_name: "Creatures Can Backstab"
+requireCrouching_name: "Require Crouching"
+requireCrouching_description: "Doesn't check the sneaking status, only whether the player is crouching. (Applies only to the player)"
+enableSpecialWeaponInstakill_name: "Instakill Backstabs for Special Weapons"
+enableSpecialWeaponInstakill_description: |
+  Special weapons are:
+  - Mehrunes' Razor
+  Disabled for "essential" NPCs.
+
+
+weaponTypes_group_name: "Enabled Weapon Types"
+axeOneEnabled_name: "Axes - One-handed"
+axeTwoEnabled_name: "Axes - Two-handed"
+bluntOneEnabled_name: "Blunt - One-handed"
+bluntTwoCloseEnabled_name: "Blunt - Two-handed Close (War Hammers)"
+bluntTwoWideEnabled_name: "Blunt - Two-handed Wide (Staves)"
+longBladeOneEnabled_name: "Long Blades - One-handed"
+longBladeTwoEnabled_name: "Long Blades - Two-handed"
+shortBladesEnabled_name: "Short Blades"
+spearsEnabled_name: "Spears"
+marksmanBowEnabled_name: "Bows"
+marksmanCrossbowEnabled_name: "Crossbows"
+marksmanThrownEnabled_name: "Thrown Weapons"
+h2hEnabled_name: "Hand to Hand"
+
+
+values_group_name: "Values"
+values_group_description: |
+  FM -> Flat Multiplier
+  AS -> Attacker Sneak
+  SM -> Sneak Multiplier
+mode_name: "Damage Multiplier Formula"
+mode_description: |
+  Linear -> FM + AS * SM
+  Threshold -> FM + AS // step * SM
+    (// = integer division)
+  Instakill -> math.huge
+    (disabled for "essential" NPCs)
+flatMult_name: "Flat Multiplier"
+flatMult_description: >
+  Default value is set up for the Linear formula.
+  For Threshold I would suggest setting the value to 0.
+sneakMult_name: "Sneak Multiplier"
+sneakMult_description: >
+  Default value is set up for the Linear formula.
+  For Threshold I would suggest setting the value to 1.
+thresholdStep_name: "Threshold Formula Step"
+npcFov_name: "Actor FOV"
+fightingMult_name: "Multiplier for Actors in Combat"
+fightingMult_description: >
+  Multiplies initial damage multiplier
+  if the NPC is in combat
+  or the player has weapon or spell ready.
+  Set it to 1 to disable the effect.
+  Min = 0.01
+
+
+debug_group_name: "Debug"
+onBackstab_group_name: "On Backstab"
+showMessage_name: "Show Message"
+playSFX_name: "Play SFX"
+
+
+alwaysBackstab_name: "Always Backstab"
+printToConsole_name: "Print to Console"
+printToConsole_description: "Print successful backstab info in lua console."

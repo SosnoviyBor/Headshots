@@ -1,0 +1,4 @@
+PLAYER: scripts/Headshots/player.lua
+NPC: scripts/Headshots/npc.lua
+MENU: scripts/Headshots/settingsMenu.lua
+GLOBAL: scripts/Headshots/settingsGlobal.lua
