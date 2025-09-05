@@ -11,17 +11,10 @@ function IntDiv(a, b)
 end
 
 function TryGetActorMarksman(actor)
-    local sneak = types.NPC.stats.skills.marksman(actor)
-    if sneak then
-        return sneak.modified
+    local marksman = types.NPC.stats.skills.marksman(actor)
+    if marksman then
+        return marksman.modified
     else
         return 0
     end
-end
-
-function UnitsToMeters(distance)
-    -- its scuffed, ok?
-    local unitsToFeetScale = 22.1
-    local feetToMetersScale = 3.281
-    return distance / unitsToFeetScale / feetToMetersScale
 end

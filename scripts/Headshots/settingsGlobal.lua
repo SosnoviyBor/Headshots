@@ -1,23 +1,6 @@
 local I = require('openmw.interfaces')
 
 I.Settings.registerGroup {
-    key = 'SettingsHeadshots_toggles',
-    page = 'Headshots',
-    l10n = 'Headshots',
-    name = 'toggles_group_name',
-    order = 0,
-    permanentStorage = true,
-    settings = {
-        -- {
-        --     key = 'modEnabled',
-        --     name = 'modEnabled_name',
-        --     renderer = 'checkbox',
-        --     default = true,
-        -- },
-    }
-}
-
-I.Settings.registerGroup {
     key = 'SettingsHeadshots_values',
     page = 'Headshots',
     l10n = 'Headshots',
@@ -36,6 +19,16 @@ I.Settings.registerGroup {
             min = 0,
             max = 1
         },
+        -- River Odai is about 1000 units wide in the vanilla Balmora (where the stone paths are)
+        {
+            key = 'distanceMin',
+            name = 'distanceMin_name',
+            description = 'distanceMin_description',
+            renderer = 'number',
+            integer = true,
+            default = 1000,
+            min = 0
+        },
         {
             key = 'mode',
             name = 'mode_name',
@@ -46,7 +39,8 @@ I.Settings.registerGroup {
                 items = {
                     "Linear",
                     "Threshold",
-                    "No helmet instakill",
+                    -- TODO
+                    -- "No helmet instakill",
                     "Instakill"
                 },
             },
@@ -66,7 +60,7 @@ I.Settings.registerGroup {
             description = 'marksmanMult_description',
             renderer = 'number',
             integer = false,
-            default = 0.05,
+            default = 0.01,
         },
         {
             key = 'thresholdStep',
@@ -76,24 +70,13 @@ I.Settings.registerGroup {
             default = 25,
             min = 1
         },
-        -- Caius' house interior, for reference, is around 7m*7m in size
-        -- Snowy Granius' bridge is about 50 meters long
         {
-            key = 'distanceMin',
-            name = 'distanceMin_name',
-            description = 'distanceMin_description',
-            renderer = 'number',
-            integer = true,
-            default = 20,
-            min = 0
-        },
-        {
-            key = 'damagePerMeter',
-            name = 'damagePerMeter_name',
-            description = 'damagePerMeter_description',
+            key = 'damagePerUnit',
+            name = 'damagePerUnit_name',
+            description = 'damagePerUnit_description',
             renderer = 'number',
             integer = false,
-            default = .025,
+            default = 1,
             min = 0
         },
     }
@@ -139,7 +122,6 @@ I.Settings.registerGroup {
         {
             key = 'printToConsole',
             name = 'printToConsole_name',
-            description = 'printToConsole_description',
             renderer = 'checkbox',
             default = false,
         },

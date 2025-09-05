@@ -1,0 +1,2 @@
+- Add limited notable human-looking creature whitelist (Vivec, Almalexia, etc)
+- Implement `No Helmet Instakills`

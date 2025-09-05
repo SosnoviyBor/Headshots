@@ -1,10 +1,8 @@
 local storage = require("openmw.storage")
 local types = require("openmw.types")
 local self = require("openmw.self")
-local I = require('openmw.interfaces')
 require("scripts.Headshots.headshotData")
 
-local sectionToggles = storage.globalSection("SettingsHeadshots_toggles")
 local sectionValues = storage.globalSection("SettingsHeadshots_values")
 local sectionDebug = storage.globalSection("SettingsHeadshots_debug")
 
@@ -37,7 +35,7 @@ local function isHeadshotSuccessful(attack)
     -- we chill if head takes 100% of the hitbox
     if not headHit(attack) then return false end
     -- distance check
-    local distance = UnitsToMeters((attack.attacker.position - self.position):length())
+    local distance = (attack.attacker.position - self.position):length()
     if distance < sectionValues:get("distanceMin") then return false end
 
     return true
@@ -48,15 +46,17 @@ local function getHeadshotMultiplier(attack)
     local scale = MarksmanScaling[sectionValues:get("mode")]
     local damageMult = scale(attack.attacker)
 
-    local distance = UnitsToMeters((attack.attacker.position - self.position):length())
-    damageMult = damageMult + distance * sectionValues:get("damagePerMeter")
+    local distance = (attack.attacker.position - self.position):length()
+    damageMult = damageMult + distance * sectionValues:get("damagePerUnit") / 1000
 
     if sectionDebug:get("printToConsole") then
         print("Headshots multiplier debug message!" ..
             "\nVictim:                  " .. self.recordId ..
             "\nAmmo used:               " .. attack.ammo ..
             "\nDistance between actors: " .. tostring(distance) ..
-            "\nDamage modifier:        x" .. tostring(damageMult))
+            "\nDamage modifier:        x" .. tostring(damageMult)..
+            "\nInitital damage:         " .. tostring(attack.damage.health)..
+            "\nFinal damage:            " .. tostring(attack.damage.health * damageMult))
     end
 
     -- you shouldn't be able to hit for less damage
@@ -71,11 +71,9 @@ function DoHeadshot(attack)
 
     local damageMult = getHeadshotMultiplier(attack)
     if damageMult == 1 then return end
+    local distance = (attack.attacker.position - self.position):length()
 
-    local initDamage = attack.damage.health
     attack.damage.health = attack.damage.health * damageMult
-    local msg = ""
 
-    if sectionDebug:get("printToConsole") then print(msg) end
-    attack.attacker:sendEvent("onHeadshot", damageMult)
+    attack.attacker:sendEvent("onHeadshot", {damageMult, distance})
 end
